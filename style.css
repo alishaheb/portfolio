@@ -1,25 +1,26 @@
 /* GENERAL */
-
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
 * {
   margin: 0;
   padding: 0;
-}
-
-body {
-  font-family: "Poppins", sans-serif;
+  box-sizing: border-box;
 }
 
 html {
   scroll-behavior: smooth;
 }
 
-p {
-  color: rgb(85, 85, 85);
+body {
+  font-family: "Poppins", sans-serif; /* Default font */
+  background-color: #1a1a1a;
+  color: white;
 }
 
-/* TRANSITION */
+p {
+  color: rgb(200, 200, 200); /* Lighter color for paragraphs on dark background */
+}
 
 a,
 .btn {
@@ -27,7 +28,6 @@ a,
 }
 
 /* DESKTOP NAV */
-
 nav,
 .nav-links {
   display: flex;
@@ -46,9 +46,8 @@ nav {
 }
 
 a {
-  color: black;
+  color: white; /* Changed from black */
   text-decoration: none;
-  text-decoration-color: white;
 }
 
 a:hover {
@@ -67,7 +66,6 @@ a:hover {
 }
 
 /* HAMBURGER MENU */
-
 #hamburger-nav {
   display: none;
 }
@@ -89,8 +87,8 @@ a:hover {
 .hamburger-icon span {
   width: 100%;
   height: 2px;
-  background-color: black;
-  transition: all 0.3 ease-in-out;
+  background-color: white; /* Changed from black */
+  transition: all 0.3s ease-in-out;
 }
 
 .menu-links {
@@ -101,7 +99,7 @@ a:hover {
   width: fit-content;
   max-height: 0;
   overflow: hidden;
-  transition: all 0.3 ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
 .menu-links a {
@@ -109,9 +107,9 @@ a:hover {
   padding: 10px;
   text-align: center;
   font-size: 1.5rem;
-  color: black;
+  color: black; /* Text on dropdown is black */
   text-decoration: none;
-  transition: all 0.3 ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
 .menu-links li {
@@ -134,26 +132,11 @@ a:hover {
   transform: rotate(-45deg) translate(10px, -5px);
 }
 
-.hamburger-icon span:first-child {
-  transform: none;
-}
-
-.hamburger-icon span:first-child {
-  opacity: 1;
-}
-
-.hamburger-icon span:first-child {
-  transform: none;
-}
-
 /* SECTIONS */
-
 section {
   padding-top: 4vh;
-  height: 96vh;
+  min-height: 96vh; /* CORRECTED: Use min-height for flexible content */
   margin: 0 10rem;
-  box-sizing: border-box;
-  min-height: fit-content;
 }
 
 .section-container {
@@ -161,7 +144,6 @@ section {
 }
 
 /* PROFILE SECTION */
-
 #profile {
   display: flex;
   justify-content: center;
@@ -207,14 +189,12 @@ section {
 }
 
 /* ICONS */
-
 .icon {
   cursor: pointer;
   height: 2rem;
 }
 
 /* BUTTONS */
-
 .btn-container {
   display: flex;
   justify-content: center;
@@ -223,7 +203,6 @@ section {
 
 .btn {
   font-weight: 600;
-  transition: all 300ms ease;
   padding: 1rem;
   width: 8rem;
   border-radius: 2rem;
@@ -231,7 +210,8 @@ section {
 
 .btn-color-1,
 .btn-color-2 {
-  border: rgb(53, 53, 53) 0.1rem solid;
+  border: white 0.1rem solid; /* Changed border for visibility */
+  color: white;
 }
 
 .btn-color-1:hover,
@@ -241,28 +221,19 @@ section {
 
 .btn-color-1,
 .btn-color-2:hover {
-  background: rgb(53, 53, 53);
-  color: white;
+  background: rgb(200, 200, 200);
+  color: black;
 }
 
 .btn-color-1:hover {
-  background: rgb(0, 0, 0);
+  background: white;
 }
 
 .btn-color-2 {
   background: none;
 }
 
-.btn-color-2:hover {
-  border: rgb(255, 255, 255) 0.1rem solid;
-}
-
-.btn-container {
-  gap: 1rem;
-}
-
 /* ABOUT SECTION */
-
 #about {
   position: relative;
 }
@@ -298,9 +269,9 @@ section {
   flex: 1;
   background: white;
   border-radius: 2rem;
-  border: rgb(53, 53, 53) 0.1rem solid;
-  border-color: rgb(163, 163, 163);
+  border: rgb(163, 163, 163) 0.1rem solid;
   text-align: center;
+  color: black; /* Added color for text visibility */
 }
 
 .section-container {
@@ -308,20 +279,13 @@ section {
   height: 80%;
 }
 
-.section__pic-container {
-  height: 400px;
-  width: 400px;
-  margin: auto 0;
-}
-
 /* EXPERIENCE SECTION */
-
 #experience {
   position: relative;
 }
 
 .experience-sub-title {
-  color: rgb(85, 85, 85);
+  color: rgb(200, 200, 200); /* Lightened for dark mode */
   font-weight: 600;
   font-size: 1.75rem;
   margin-bottom: 2rem;
@@ -354,7 +318,6 @@ article .icon {
 }
 
 /* PROJECTS SECTION */
-
 #projects {
   position: relative;
 }
@@ -362,6 +325,7 @@ article .icon {
 .color-container {
   border-color: rgb(163, 163, 163);
   background: rgb(250, 250, 250);
+  color: black; /* Added for text visibility */
 }
 
 .project-img {
@@ -381,7 +345,6 @@ article .icon {
 }
 
 /* CONTACT */
-
 #contact {
   display: flex;
   justify-content: center;
@@ -393,9 +356,9 @@ article .icon {
   display: flex;
   justify-content: center;
   border-radius: 2rem;
-  border: rgb(53, 53, 53) 0.1rem solid;
-  border-color: rgb(163, 163, 163);
-  background: (250, 250, 250);
+  border: rgb(163, 163, 163) 0.1rem solid;
+  background-color: rgb(250, 250, 250); /* CORRECTED: Valid background syntax */
+  color: black; /* Added for text visibility */
   margin: 2rem auto;
   padding: 0.5rem;
 }
@@ -410,6 +373,7 @@ article .icon {
 
 .contact-info-container p {
   font-size: larger;
+  color: black;
 }
 
 .contact-icon {
@@ -421,7 +385,6 @@ article .icon {
 }
 
 /* FOOTER SECTION */
-
 footer {
   height: 26vh;
   margin: 0 1rem;
@@ -430,7 +393,8 @@ footer {
 footer p {
   text-align: center;
 }
-/* Footer nav */
+
+/* ANIMATIONS */
 .fade-in-name {
   opacity: 0;
   animation: fadeIn 2s ease-in forwards;
@@ -442,10 +406,11 @@ footer p {
   }
 }
 
-
+/* SKILLS SECTION */
 #skills {
   text-align: center;
   padding: 80px 40px;
+  font-family: 'Inter', sans-serif; /* Specific font for this section */
 }
 
 #skills h1 {
@@ -480,7 +445,7 @@ footer p {
 }
 
 .skill-card img {
-  width: 90px;     /* 🔹 increased size */
+  width: 90px;
   height: 90px;
   object-fit: contain;
   margin-bottom: 20px;
@@ -490,9 +455,10 @@ footer p {
   margin: 0;
   font-size: 1.1rem;
   font-weight: 600;
+  color: white;
 }
 
-/* Responsive adjustments */
+/* RESPONSIVE MEDIA QUERIES */
 @media (max-width: 900px) {
   .skills-container {
     gap: 40px 50px;
