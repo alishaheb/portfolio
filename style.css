@@ -441,15 +441,7 @@ footer p {
     opacity: 1;
   }
 }
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
-body {
-  background-color: #1a1a1a;
-  color: white;
-  font-family: 'Inter', sans-serif;
-  margin: 0;
-  padding: 0;
-}
 
 #skills {
   text-align: center;
