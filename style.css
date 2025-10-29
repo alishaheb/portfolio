@@ -177,15 +177,17 @@ section {
   margin-bottom: 1rem;
 }
 
-/* Your existing styles */
+
+
+
+
 .title {
   font-size: 3rem;
   text-align: center;
-  /* add the animation */
-  animation: slide-in-right 700ms ease-out both;
+  /* slower + softer easing + tiny delay */
+  animation: slide-in-right 1.6s cubic-bezier(.22,.61,.36,1) both 0.15s;
 }
 
-/* Keyframes for sliding in from the right */
 @keyframes slide-in-right {
   from {
     transform: translateX(60px);
@@ -197,12 +199,10 @@ section {
   }
 }
 
-/* Respect users who prefer reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .title {
-    animation: none;
-  }
-}
+
+
+
+
 
 
 #socials-container {
