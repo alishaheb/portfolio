@@ -10,11 +10,12 @@
 
 html {
   scroll-behavior: smooth;
+
 }
 
 body {
   font-family: "Poppins", sans-serif; /* Default font */
-  background-color: #1a1a1a;
+  background: url("./assets/back.png") center/cover no-repeat fixed;
   color: white;
 }
 
