@@ -177,10 +177,33 @@ section {
   margin-bottom: 1rem;
 }
 
+/* Your existing styles */
 .title {
   font-size: 3rem;
   text-align: center;
+  /* add the animation */
+  animation: slide-in-right 700ms ease-out both;
 }
+
+/* Keyframes for sliding in from the right */
+@keyframes slide-in-right {
+  from {
+    transform: translateX(60px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .title {
+    animation: none;
+  }
+}
+
 
 #socials-container {
   display: flex;
