@@ -509,3 +509,8 @@ footer p {
     height: 70px;
   }
 }
+.text-container p {
+  font-size: clamp(0.95rem, 0.6vw + 0.7rem, 1.2rem); /* ~15px → ~19px */
+  line-height: 1.6;
+  letter-spacing: -0.005em;
+}
