@@ -15,7 +15,7 @@ html {
 
 body {
   font-family: "Poppins", sans-serif; /* Default font */
-  background: url("./assets/back.png") center/cover no-repeat fixed;
+  background: url("./assets/back.jpg") center/cover no-repeat fixed;
   color: white;
 }
 
