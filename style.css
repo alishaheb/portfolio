@@ -94,6 +94,60 @@ a {
 
 main, header, footer { position: relative; z-index: 2; }
 
+/* ============ ARCHITECTURE HUD ============ */
+.arch-hud {
+  position: fixed;
+  left: 1.6rem;
+  bottom: 1.4rem;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.7rem 0.95rem;
+  border-radius: 12px;
+  background: rgba(8, 11, 20, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  pointer-events: none;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  opacity: 0.55;
+  transition: opacity 0.4s var(--ease);
+}
+
+.arch-hud:hover { opacity: 0.9; }
+
+.arch-hud-title {
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.arch-hud-layer {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.arch-hud-bar {
+  display: block;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.09);
+  overflow: hidden;
+}
+
+.arch-hud-bar i {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transition: width 0.25s linear;
+}
+
 /* ============ SCROLL PROGRESS ============ */
 .scroll-progress {
   position: fixed;
@@ -924,4 +978,5 @@ main, header, footer { position: relative; z-index: 2; }
     transition-duration: 0.01ms !important;
   }
   .reveal { opacity: 1; transform: none; }
+  .arch-hud { display: none; }
 }

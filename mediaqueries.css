@@ -60,6 +60,7 @@
   .contact-lede { margin-bottom: 2rem; }
 
   .scroll-cue { display: none; }
+  .arch-hud { display: none; }
 }
 
 @media screen and (max-width: 480px) {
