@@ -8,6 +8,11 @@
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // Progressive enhancement: .reveal elements are visible by default and only
+  // start hidden once this class is set. If this script dies for any reason,
+  // the page still renders its content instead of a blank screen.
+  document.documentElement.classList.add("js-ready");
+
   /* =========================================================
      1. TRANSFORMER BACKGROUND
      ---------------------------------------------------------
@@ -25,13 +30,20 @@
     var hudLayer = document.getElementById("arch-hud-layer");
     var hudFill = document.getElementById("arch-hud-fill");
 
-    function fallback() {
-      canvas.style.background =
-        "radial-gradient(ellipse at 50% 0%, #101a33 0%, #05070d 65%)";
+    // The CSS gradient + aurora layer already stand on their own, so the
+    // fallback just steps out of the way rather than painting over them.
+    function fallback(reason) {
+      canvas.style.display = "none";
       if (hud) hud.style.display = "none";
+      document.documentElement.classList.add("no-webgl");
+      if (window.console && reason) console.warn("[background] " + reason);
     }
 
-    if (typeof THREE === "undefined" || reduceMotion) {
+    if (typeof THREE === "undefined") {
+      fallback("three.js did not load — using CSS gradient background only");
+      return;
+    }
+    if (reduceMotion) {
       fallback();
       return;
     }
@@ -42,7 +54,7 @@
         throw new Error("no webgl");
       }
     } catch (e) {
-      fallback();
+      fallback("WebGL unavailable — using CSS gradient background only");
       return;
     }
 
@@ -90,7 +102,7 @@
 
     /* ---------- Scene ---------- */
     var scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x05070d, 0.0042);
+    scene.fog = new THREE.FogExp2(0x070b18, 0.0028);
 
     var camera = new THREE.PerspectiveCamera(
       60,
@@ -321,7 +333,7 @@
       var fc = HEAD_COLORS[fl % HEADS];
       for (var ci = 0; ci < corners.length; ci++) {
         framePts.push(corners[ci][0], corners[ci][1], corners[ci][2]);
-        frameCols.push(fc.r * 0.3, fc.g * 0.3, fc.b * 0.3);
+        frameCols.push(fc.r * 0.55, fc.g * 0.55, fc.b * 0.55);
       }
     }
 
@@ -464,9 +476,11 @@
     function writeArcColors(layerBoost) {
       for (var a = 0; a < ARCS; a++) {
         var c = HEAD_COLORS[aHead[a]];
-        // Gamma-shape the weight so strong links dominate visually
-        var w = Math.pow(aWeight[a], 1.45) * layerBoost[aLayer[a]] * 1.5;
-        if (w > 1.6) w = 1.6;
+        // Gamma-shape the weight so strong links dominate. Exponent stays
+        // below 1 so a typical 1/TOPK weight still renders clearly — at 1.45
+        // the arcs crushed to ~rgb(16,28,51) and vanished.
+        var w = Math.pow(aWeight[a], 0.85) * layerBoost[aLayer[a]] * 2.6;
+        if (w > 3.2) w = 3.2;
         var rr = c.r * w, gg = c.g * w, bb = c.b * w;
 
         var base = a * VERTS_PER_ARC * 3;
@@ -577,10 +591,15 @@
   /* =========================================================
      2. SCROLL REVEAL
      ========================================================= */
+  function revealAll() {
+    var els = document.querySelectorAll(".reveal");
+    for (var i = 0; i < els.length; i++) els[i].classList.add("visible");
+  }
+
   function initReveal() {
     var els = document.querySelectorAll(".reveal");
     if (!("IntersectionObserver" in window)) {
-      for (var i = 0; i < els.length; i++) els[i].classList.add("visible");
+      revealAll();
       return;
     }
     var obs = new IntersectionObserver(
@@ -769,12 +788,25 @@
      BOOT
      ========================================================= */
   function boot() {
-    initBackground();
-    initReveal();
-    initScrollUI();
-    initTilt();
-    initCounters();
-    initMenu();
+    // Each subsystem is isolated: a failure in the WebGL background must not
+    // stop the reveal animations, nav or menu from working.
+    var steps = [
+      ["reveal", initReveal],
+      ["scroll UI", initScrollUI],
+      ["menu", initMenu],
+      ["counters", initCounters],
+      ["tilt", initTilt],
+      ["background", initBackground]
+    ];
+
+    for (var i = 0; i < steps.length; i++) {
+      try {
+        steps[i][1]();
+      } catch (err) {
+        if (window.console) console.error("[" + steps[i][0] + "] failed:", err);
+        if (steps[i][0] === "reveal") revealAll();
+      }
+    }
   }
 
   if (document.readyState === "loading") {
