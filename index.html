@@ -2,395 +2,390 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Portfolio</title>
+    <meta name="description" content="Seyed Ali Shahebrahimi — Machine Learning Engineer & Data Scientist. End-to-end ML systems: data pipelines, model training, production APIs." />
+    <meta name="author" content="Seyed Ali Shahebrahimi" />
+    <meta property="og:title" content="Seyed Ali Shahebrahimi — ML Engineer & Data Scientist" />
+    <meta property="og:description" content="End-to-end machine learning systems: data pipelines, model training and serving, production APIs." />
+    <meta property="og:type" content="website" />
+    <title>Seyed Ali Shahebrahimi — ML Engineer &amp; Data Scientist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="mediaqueries.css" />
   </head>
   <body>
-    <nav id="desktop-nav">
-      <div class="logo">portfolio </div>
-      <div>
-        <ul class="nav-links">
-          <li><a href="#about">About</a></li>
-          <li><a href="#skills">Experience</a></li>
-          <li><a href="#projects">Projects</a></li>
-          <li><a href="#contact">Contact</a></li>
+    <!-- 3D BACKGROUND CANVAS -->
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
+    <div class="bg-vignette" aria-hidden="true"></div>
+
+    <!-- SCROLL PROGRESS -->
+    <div class="scroll-progress" aria-hidden="true"><span id="scroll-bar"></span></div>
+
+    <!-- NAV -->
+    <header id="site-header">
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#hero" class="brand">
+          <span class="brand-mark">SA</span>
+          <span class="brand-text">Seyed Ali Shahebrahimi</span>
+        </a>
+        <ul class="nav-links" id="nav-links">
+          <li><a href="#about" class="nav-link">About</a></li>
+          <li><a href="#skills" class="nav-link">Skills</a></li>
+          <li><a href="#projects" class="nav-link">Projects</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
         </ul>
-      </div>
-    </nav>
-    <nav id="hamburger-nav">
-      <div class="logo">Seyed Ali Shahebrahimi</div>
-      <div class="hamburger-menu">
-        <div class="hamburger-icon" onclick="toggleMenu()">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-        <div class="menu-links">
-          <li><a href="#about" onclick="toggleMenu()">About</a></li>
-          <li><a href="#experience" onclick="toggleMenu()">Experience</a></li>
-          <li><a href="#projects" onclick="toggleMenu()">Projects</a></li>
-          <li><a href="#contact" onclick="toggleMenu()">Contact</a></li>
-        </div>
-      </div>
-    </nav>
-    <section id="profile">
-      <div class="section__pic-container">
-        <img class="fade-in-name " src="./assets/profile-pic.png" alt="Ali profile picture"/>
-      </div>
-      <div class="section__text">
-        <p class="section__text__p1">Hello, I'm</p>
-        <h1 class="title">Seyed Ali Shahebrahimi</h1>
-        <p class="section__text__p2">Machine Learning and Data Scientist</p>
-
-        <div class="btn-container">
-          <button
-            class="btn btn-color-2"
-
-
-            onclick="window.open('./assets/SeyedAliml_14april.pdf')"
-          >
-            Download My CV
-
+        <div class="nav-actions">
+          <a class="btn btn-ghost btn-sm" href="./assets/SeyedAliml_14april.pdf" target="_blank" rel="noopener">Résumé</a>
+          <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+            <span></span><span></span><span></span>
           </button>
-          <button class="btn btn-color-1" onclick="location.href='./#contact'">
-            Contact Info
-          </button>
-        </div>
-        <div id="socials-container">
-          <img
-            src="./assets/linkedin.png"
-            alt="My LinkedIn profile"
-            class="icon"
-            onclick="location.href='https://www.linkedin.com/in/seyed-ali-shahebrahimi'"
-          />
-          <img
-            src="./assets/github.png"
-            alt="My Github profile"
-            class="icon"
-            onclick="location.href='https://github.com/alishaheb'"
-          />
-          <img
-            src="./assets/email.png"
-            alt="Email me"
-            class="icon"
-            onclick="location.href='mailto:ali.sh.creative@gmail.com'"
-          />
-        </div>
-      </div>
-    </section>
-    <section id="about">
-      <p class="section__text__p1">Get To Know More</p>
-      <h1 class="title">About Me</h1>
-      <div class="section-container">
-        <div class="section__pic-container">
-          <img
-            src="./assets/about.jpg"
-            alt="Profile picture"
-            class="about-pic"
-          />
-        </div>
-        <div class="about-details-container">
-          <div class="about-containers">
-            <div class="details-container">
-              <img
-                src="./assets/experience.png"
-                alt="Experience icon"
-                class="icon"
-              />
-              <h3>Experience</h3>
-              <p> Full Stack Developer<br>Machine Learning<br>Data Science </p>
-            </div>
-            <div class="details-container">
-              <img
-                src="./assets/education.png"
-                alt="Education icon"
-                class="icon"
-              />
-              <h3>Education</h3>
-              <p>B.Sc. in Computer Engineering (Software)<br />M.Sc. Masters Degree(Data Science)</p>
-            </div>
-          </div>
-          <div class="text-container">
-            <p>
-              Data Scientist & ML Engineer (MSc) with 4 years of experience across
-              software and machine learning, including 3
-              years in industry. I build end-to-end systems
-              spanning data pipelines, model training and serving, and production APIs (Flask, FastAPI), using PyTorch and Graph Neural Networks
-              (PyG), with Dockerised CI/CD and automated testing. Recently delivered a multi-dataset ML pipeline and KPI
-              dashboards at Azaries, improving development speed and model generalisation.
-            </p>
-          </div>
-        </div>
-      </div>
-      <img
-        src="./assets/arrow.png"
-        alt="Arrow icon"
-        class="icon arrow"
-        onclick="location.href='./#experience'"
-      />
-    </section>
-    <section id="skills">
-      <h1>Skills</h1>
-<div class="skills-container">
-  <div class="skill-card">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python">
-    <p>Python</p>
-  </div>
-  <div class="skill-card">
-    <img src="assets/sql.svg" alt="SQL">
-    <p>SQL</p>
-  </div>
-  <div class="skill-card">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/c/cf/New_Power_BI_Logo.svg" alt="Power BI">
-    <p>Power BI</p>
-  </div>
-  <div class="skill-card">
-    <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jenkins.svg" alt="Power BI">
-    <p>Jenkins</p>
-  </div>
-  <div class="skill-card">
-    <img src="https://logo.svgcdn.com/logos/tableau-icon.svg" alt="Tableau">
-    <p>Tableau</p>
-  </div>
-  <div class="skill-card">
-    <img src="assets/amazon.svg" alt="AWS">
-    <p>AWS</p>
-  </div>
-  <div class="skill-card">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg" alt="GCP">
-    <p>GCP</p>
-  </div>
-  <div class="skill-card">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg" alt="Pandas">
-    <p>Pandas</p>
-  </div>
-  <div class="skill-card">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/numpy/numpy-original.svg" alt="NumPy">
-    <p>NumPy</p>
-  </div>
-  <div class="skill-card">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/scikitlearn/scikitlearn-original.svg" alt="Scikit Learn">
-    <p>Scikit Learn</p>
-  </div>
-  <div class="skill-card">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg" alt="TensorFlow">
-    <p>TensorFlow</p>
-  </div>
-  <div class="skill-card">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg" alt="PyTorch">
-    <p>PyTorch</p>
-  </div>
-  <div class="skill-card">
-    <img src="assets/docker-original-wordmark.svg" alt="Docker">
-    <p>Docker</p>
-  </div>
-  <div class="skill-card">
-    <img src="assets/apachespark-original.svg" alt="PySpark">
-    <p>PySpark</p>
-  </div>
-  <div class="skill-card">
-    <img src="assets/excel_logo_logos_icon.png" alt="Excel">
-    <p>Excel</p>
-  </div>
-  <div class="skill-card">
-    <img src="assets/github.png" alt="Git & Github">
-    <p>Git & Github</p>
-  </div>
-  <div class="skill-card">
-    <img src="assets/r-original.svg" alt="R">
-    <p>R</p>
-  </div>
-  <div class="skill-card">
-    <img src="assets/matplotlib-original.svg" alt="Matplotlib">
-    <p>Matplotlib</p>
-  </div>
-  <div class="skill-card">
-    <img src="assets/hugging-face.svg" alt="Matplotlib">
-    <p>Hugging face</p>
-  </div>
-</div>
-    </section>
-    <section id="projects">
-      <p class="section__text__p1">Browse My Recent</p>
-      <h1 class="title">Projects</h1>
-      <div class="experience-details-container">
-        <div class="about-containers">
-          <div class="details-container color-container">
-            <div class="article-container">
-              <img
-                src="./assets/guy.jpg"
-                alt="Project 1"
-                class="project-img"
-              />
-            </div>
-            <h2 class="experience-sub-title project-title">Business analytics</h2>
-            <div class="btn-container">
-              <button
-                class="btn btn-color-2 project-btn"
-                onclick="location.href='https://github.com/alishaheb/PBA'"
-              >
-                Github
-
-            </div>
-
-          </div>
-          <div class="details-container color-container">
-            <div class="article-container">
-              <img
-                src="./assets/roberta2.jpg"
-                alt="Project 2"
-                class="project-img"
-              />
-            </div>
-            <h2 class="experience-sub-title project-title">Sequence classification </h2>
-            <div class="btn-container">
-              <button
-                class="btn btn-color-2 project-btn"
-                onclick="location.href='https://github.com/'"
-              >
-                Github
-              </button>
-
-            </div>
-          </div>
-          <div class="details-container color-container">
-            <div class="article-container">
-              <img
-                src="./assets/aws-size.jpg"
-                alt="Project 3"
-                class="project-img"
-              />
-            </div>
-            <h2 class="experience-sub-title project-title">Stock Market Analysis </h2>
-            <div class="btn-container">
-              <button
-                class="btn btn-color-2 project-btn"
-                onclick="location.href='https://github.com/alishaheb/aws-stock-analysis'"
-              >
-                Github
-              </button>
-              <button
-                class="btn btn-color-2 project-btn"
-                onclick="location.href='https://github.com/alishaheb'"
-              >
-                Live Demo
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="experience-details-container">
-        <div class="about-containers">
-          <div class="details-container color-container">
-            <div class="article-container">
-              <img
-                src="./assets/preprocess.jpg"
-                alt="Project 1"
-                class="project-img"
-              />
-            </div>
-            <h2 class="experience-sub-title project-title">Automated ML pipeline</h2>
-            <div class="btn-container">
-              <button
-                class="btn btn-color-2 project-btn"
-                onclick="location.href='https://github.com/alishaheb/preprocessing-pipeline'"
-              >
-                Github
-              </button>
-              <button
-                class="btn btn-color-2 project-btn"
-                onclick="location.href='https://github.com/alishaheb'"
-              >
-                Live Demo
-              </button>
-            </div>
-
-          </div>
-          <div class="details-container color-container">
-            <div class="article-container">
-              <img
-                src="./assets/health.png"
-                alt="Project 2"
-                class="project-img"
-              />
-            </div>
-            <h2 class="experience-sub-title project-title">Dataset_Healtcare </h2>
-            <div class="btn-container">
-              <button
-                class="btn btn-color-2 project-btn"
-                onclick="location.href='https://github.com/'"
-              >
-                Github
-              </button>
-
-            </div>
-          </div>
-          <div class="details-container color-container">
-            <div class="article-container">
-              <img
-                src="./assets/sql.jpg"
-                alt="Project 3"
-                class="project-img"
-              />
-            </div>
-            <h2 class="experience-sub-title project-title">Database-design</h2>
-            <div class="btn-container">
-              <button
-                class="btn btn-color-2 project-btn"
-                onclick="location.href='https://github.com/alishaheb/sql-normalization'"
-              >
-                Github
-              </button>
-
-            </div>
-          </div>
-        </div>
-      </div>
-      <img
-        src="./assets/arrow.png"
-        alt="Arrow icon"
-        class="icon arrow"
-        onclick="location.href='./#contact'"
-      />
-    </section>
-    <section id="contact">
-      <p class="section__text__p1">Get in Touch</p>
-      <h1 class="title">Contact Me</h1>
-      <div class="contact-info-upper-container">
-        <div class="contact-info-container">
-          <img
-            src="./assets/email.png"
-            alt="Email icon"
-            class="icon contact-icon email-icon"
-          />
-          <p><a href="mailto:examplemail@gmail.com">ali.sh.creative@gmail.com</a></p>
-        </div>
-        <div class="contact-info-container">
-          <img
-            src="./assets/linkedin.png"
-            alt="LinkedIn icon"
-            class="icon contact-icon"
-          />
-          <a href="https://www.linkedin.com/in/seyed-ali-shahebrahimi" target="_blank">LinkedIn</a>
-        </div>
-      </div>
-    </section>
-    <footer>
-      <nav>
-        <div class="nav-links-container">
-          <ul class="nav-links">
-            <li><a href="#about">About</a></li>
-            <li><a href="#skills">Experience</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
         </div>
       </nav>
-      <p>Copyright &#169; 2025 Seyed ali Shahebrahimi. All Rights Reserved.</p>
+      <div class="mobile-menu" id="mobile-menu">
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+        <a href="./assets/SeyedAliml_14april.pdf" target="_blank" rel="noopener">Résumé</a>
+      </div>
+    </header>
+
+    <main>
+      <!-- HERO -->
+      <section id="hero" class="hero">
+        <div class="hero-inner">
+          <div class="hero-text" data-parallax="0.15">
+            <div class="eyebrow reveal">
+              <span class="pulse-dot"></span> Available for opportunities
+            </div>
+            <h1 class="hero-title reveal" data-delay="1">
+              Seyed Ali<br /><span class="grad-text">Shahebrahimi</span>
+            </h1>
+            <p class="hero-role reveal" data-delay="2">
+              Machine Learning Engineer &amp; Data Scientist
+            </p>
+            <p class="hero-desc reveal" data-delay="3">
+              I design and ship end-to-end ML systems — from data pipelines and
+              model training to production APIs that hold up under real traffic.
+            </p>
+            <div class="hero-stats reveal" data-delay="4">
+              <div class="stat">
+                <span class="stat-num" data-count="4">0</span><span class="stat-suffix">+</span>
+                <span class="stat-label">Years experience</span>
+              </div>
+              <div class="stat">
+                <span class="stat-num" data-count="3">0</span><span class="stat-suffix">+</span>
+                <span class="stat-label">Years in industry</span>
+              </div>
+              <div class="stat">
+                <span class="stat-num" data-count="19">0</span><span class="stat-suffix">+</span>
+                <span class="stat-label">Tools &amp; frameworks</span>
+              </div>
+            </div>
+            <div class="hero-actions reveal" data-delay="5">
+              <a class="btn btn-primary" href="./assets/SeyedAliml_14april.pdf" target="_blank" rel="noopener">
+                Download CV
+              </a>
+              <a class="btn btn-ghost" href="#projects">View Projects</a>
+            </div>
+            <div class="socials reveal" data-delay="6">
+              <a href="https://www.linkedin.com/in/seyed-ali-shahebrahimi" target="_blank" rel="noopener" aria-label="LinkedIn" class="social">
+                <img src="./assets/linkedin.png" alt="" />
+              </a>
+              <a href="https://github.com/alishaheb" target="_blank" rel="noopener" aria-label="GitHub" class="social">
+                <img src="./assets/github.png" alt="" />
+              </a>
+              <a href="mailto:ali.sh.creative@gmail.com" aria-label="Email" class="social">
+                <img src="./assets/email.png" alt="" />
+              </a>
+            </div>
+          </div>
+          <div class="hero-visual reveal" data-delay="3">
+            <div class="parallax-layer" data-parallax="-0.08">
+              <div class="portrait-frame tilt">
+                <div class="portrait-glow"></div>
+                <img src="./assets/profile-pic.png" alt="Portrait of Seyed Ali Shahebrahimi" class="portrait" />
+                <div class="portrait-ring"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a href="#about" class="scroll-cue" aria-label="Scroll to About">
+          <span class="mouse"><span class="wheel"></span></span>
+          <span class="scroll-cue-text">Scroll</span>
+        </a>
+      </section>
+
+      <!-- ABOUT -->
+      <section id="about" class="section">
+        <div class="section-head reveal">
+          <p class="eyebrow-plain">Get to know more</p>
+          <h2 class="section-title">About Me</h2>
+        </div>
+        <div class="about-grid">
+          <div class="about-visual reveal">
+            <div class="about-img-wrap tilt">
+              <img src="./assets/about.jpg" alt="Working at a desk" />
+            </div>
+          </div>
+          <div class="about-content">
+            <div class="card-row">
+              <article class="glass-card tilt reveal" data-delay="1">
+                <img src="./assets/experience.png" alt="" class="card-icon" />
+                <h3>Experience</h3>
+                <p>Machine Learning<br />Data Science<br />Full Stack Development</p>
+              </article>
+              <article class="glass-card tilt reveal" data-delay="2">
+                <img src="./assets/education.png" alt="" class="card-icon" />
+                <h3>Education</h3>
+                <p>M.Sc. Data Science<br />B.Sc. Computer Engineering (Software)</p>
+              </article>
+            </div>
+            <div class="about-text reveal" data-delay="3">
+              <p>
+                Data Scientist &amp; ML Engineer (MSc) with 4 years of experience
+                across software and machine learning, including 3 years in
+                industry. I build end-to-end systems spanning data pipelines,
+                model training and serving, and production APIs (Flask, FastAPI),
+                using PyTorch and Graph Neural Networks (PyG), with Dockerised
+                CI/CD and automated testing. Recently delivered a multi-dataset ML
+                pipeline and KPI dashboards at Azaries, improving development
+                speed and model generalisation.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SKILLS -->
+      <section id="skills" class="section">
+        <div class="section-head reveal">
+          <p class="eyebrow-plain">What I work with</p>
+          <h2 class="section-title">Skills &amp; Tooling</h2>
+        </div>
+        <div class="skills-grid">
+          <div class="skill-card tilt reveal">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python" loading="lazy" />
+            <span>Python</span>
+          </div>
+          <div class="skill-card tilt reveal">
+            <img src="assets/sql.svg" alt="SQL" loading="lazy" />
+            <span>SQL</span>
+          </div>
+          <div class="skill-card tilt reveal">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg" alt="PyTorch" loading="lazy" />
+            <span>PyTorch</span>
+          </div>
+          <div class="skill-card tilt reveal">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg" alt="TensorFlow" loading="lazy" />
+            <span>TensorFlow</span>
+          </div>
+          <div class="skill-card tilt reveal">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/scikitlearn/scikitlearn-original.svg" alt="Scikit-learn" loading="lazy" />
+            <span>Scikit-learn</span>
+          </div>
+          <div class="skill-card tilt reveal">
+            <img src="assets/hugging-face.svg" alt="Hugging Face" loading="lazy" />
+            <span>Hugging Face</span>
+          </div>
+          <div class="skill-card tilt reveal">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg" alt="Pandas" loading="lazy" />
+            <span>Pandas</span>
+          </div>
+          <div class="skill-card tilt reveal">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/numpy/numpy-original.svg" alt="NumPy" loading="lazy" />
+            <span>NumPy</span>
+          </div>
+          <div class="skill-card tilt reveal">
+            <img src="assets/apachespark-original.svg" alt="PySpark" loading="lazy" />
+            <span>PySpark</span>
+          </div>
+          <div class="skill-card tilt reveal">
+            <img src="assets/docker-original-wordmark.svg" alt="Docker" loading="lazy" />
+            <span>Docker</span>
+          </div>
+          <div class="skill-card tilt reveal">
+            <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jenkins.svg" alt="Jenkins" loading="lazy" />
+            <span>Jenkins</span>
+          </div>
+          <div class="skill-card tilt reveal">
+            <img src="assets/amazon.svg" alt="AWS" loading="lazy" />
+            <span>AWS</span>
+          </div>
+          <div class="skill-card tilt reveal">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg" alt="Google Cloud" loading="lazy" />
+            <span>GCP</span>
+          </div>
+          <div class="skill-card tilt reveal">
+            <img src="assets/github.png" alt="Git and GitHub" loading="lazy" />
+            <span>Git &amp; GitHub</span>
+          </div>
+          <div class="skill-card tilt reveal">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/cf/New_Power_BI_Logo.svg" alt="Power BI" loading="lazy" />
+            <span>Power BI</span>
+          </div>
+          <div class="skill-card tilt reveal">
+            <img src="https://logo.svgcdn.com/logos/tableau-icon.svg" alt="Tableau" loading="lazy" />
+            <span>Tableau</span>
+          </div>
+          <div class="skill-card tilt reveal">
+            <img src="assets/matplotlib-original.svg" alt="Matplotlib" loading="lazy" />
+            <span>Matplotlib</span>
+          </div>
+          <div class="skill-card tilt reveal">
+            <img src="assets/r-original.svg" alt="R" loading="lazy" />
+            <span>R</span>
+          </div>
+          <div class="skill-card tilt reveal">
+            <img src="assets/excel_logo_logos_icon.png" alt="Excel" loading="lazy" />
+            <span>Excel</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROJECTS -->
+      <section id="projects" class="section">
+        <div class="section-head reveal">
+          <p class="eyebrow-plain">Browse my recent</p>
+          <h2 class="section-title">Projects</h2>
+        </div>
+        <div class="projects-grid">
+          <article class="project-card tilt reveal">
+            <div class="project-media">
+              <img src="./assets/preprocess.jpg" alt="Automated ML pipeline" loading="lazy" />
+            </div>
+            <div class="project-body">
+              <div class="tags"><span>Python</span><span>MLOps</span><span>CI/CD</span></div>
+              <h3>Automated ML Pipeline</h3>
+              <p>End-to-end preprocessing and training pipeline with reproducible runs and automated testing.</p>
+              <div class="project-links">
+                <a class="btn btn-ghost btn-sm" href="https://github.com/alishaheb/preprocessing-pipeline" target="_blank" rel="noopener">GitHub</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-card tilt reveal" data-delay="1">
+            <div class="project-media">
+              <img src="./assets/roberta2.jpg" alt="Sequence classification" loading="lazy" />
+            </div>
+            <div class="project-body">
+              <div class="tags"><span>NLP</span><span>Transformers</span><span>PyTorch</span></div>
+              <h3>Sequence Classification</h3>
+              <p>Transformer-based text classification using RoBERTa, with fine-tuning and evaluation tooling.</p>
+              <div class="project-links">
+                <a class="btn btn-ghost btn-sm" href="https://github.com/alishaheb" target="_blank" rel="noopener">GitHub</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-card tilt reveal" data-delay="2">
+            <div class="project-media">
+              <img src="./assets/aws-size.jpg" alt="Stock market analysis" loading="lazy" />
+            </div>
+            <div class="project-body">
+              <div class="tags"><span>AWS</span><span>Time Series</span><span>Analytics</span></div>
+              <h3>Stock Market Analysis</h3>
+              <p>Cloud-based analytics on market data with automated ingestion and visual reporting.</p>
+              <div class="project-links">
+                <a class="btn btn-ghost btn-sm" href="https://github.com/alishaheb/aws-stock-analysis" target="_blank" rel="noopener">GitHub</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-card tilt reveal">
+            <div class="project-media">
+              <img src="./assets/guy.jpg" alt="Business analytics" loading="lazy" />
+            </div>
+            <div class="project-body">
+              <div class="tags"><span>Analytics</span><span>Statistics</span><span>Reporting</span></div>
+              <h3>Business Analytics</h3>
+              <p>Predictive business analytics with statistical modelling and decision-support reporting.</p>
+              <div class="project-links">
+                <a class="btn btn-ghost btn-sm" href="https://github.com/alishaheb/PBA" target="_blank" rel="noopener">GitHub</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-card tilt reveal" data-delay="1">
+            <div class="project-media">
+              <img src="./assets/health.png" alt="Healthcare dataset analysis" loading="lazy" />
+            </div>
+            <div class="project-body">
+              <div class="tags"><span>Healthcare</span><span>EDA</span><span>ML</span></div>
+              <h3>Healthcare Dataset Analysis</h3>
+              <p>Exploratory analysis and predictive modelling on clinical data, with feature engineering.</p>
+              <div class="project-links">
+                <a class="btn btn-ghost btn-sm" href="https://github.com/alishaheb" target="_blank" rel="noopener">GitHub</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-card tilt reveal" data-delay="2">
+            <div class="project-media">
+              <img src="./assets/sql.jpg" alt="Database design" loading="lazy" />
+            </div>
+            <div class="project-body">
+              <div class="tags"><span>SQL</span><span>Normalisation</span><span>Schema Design</span></div>
+              <h3>Database Design</h3>
+              <p>Relational schema design and normalisation with query optimisation for analytical workloads.</p>
+              <div class="project-links">
+                <a class="btn btn-ghost btn-sm" href="https://github.com/alishaheb/sql-normalization" target="_blank" rel="noopener">GitHub</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section id="contact" class="section">
+        <div class="section-head reveal">
+          <p class="eyebrow-plain">Get in touch</p>
+          <h2 class="section-title">Contact Me</h2>
+        </div>
+        <div class="contact-wrap reveal">
+          <p class="contact-lede">
+            Open to ML engineering and data science roles, and to collaborating on
+            interesting problems. The fastest way to reach me is email.
+          </p>
+          <div class="contact-cards">
+            <a class="contact-card tilt" href="mailto:ali.sh.creative@gmail.com">
+              <img src="./assets/email.png" alt="" />
+              <div>
+                <span class="contact-label">Email</span>
+                <span class="contact-value">ali.sh.creative@gmail.com</span>
+              </div>
+            </a>
+            <a class="contact-card tilt" href="https://www.linkedin.com/in/seyed-ali-shahebrahimi" target="_blank" rel="noopener">
+              <img src="./assets/linkedin.png" alt="" />
+              <div>
+                <span class="contact-label">LinkedIn</span>
+                <span class="contact-value">seyed-ali-shahebrahimi</span>
+              </div>
+            </a>
+            <a class="contact-card tilt" href="https://github.com/alishaheb" target="_blank" rel="noopener">
+              <img src="./assets/github.png" alt="" />
+              <div>
+                <span class="contact-label">GitHub</span>
+                <span class="contact-value">alishaheb</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <ul class="nav-links footer-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <p>&copy; 2026 Seyed Ali Shahebrahimi. All rights reserved.</p>
     </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
