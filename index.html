@@ -11,6 +11,22 @@
     <title>Seyed Ali Shahebrahimi — ML Engineer &amp; Data Scientist</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Only the 6 weights actually used (was 9 via a serialised @import) -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap"
+    />
+    <!-- three.js and the skill icons are fetched lazily, after first paint -->
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+    <!-- LCP element -->
+    <link
+      rel="preload"
+      as="image"
+      href="./assets/opt/profile.webp"
+      type="image/webp"
+      fetchpriority="high"
+    />
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="mediaqueries.css" />
   </head>
@@ -26,7 +42,7 @@
 
     <!-- ARCHITECTURE READOUT -->
     <aside class="arch-hud" id="arch-hud" aria-hidden="true">
-      <span class="arch-hud-title">transformer&nbsp;·&nbsp;forward pass</span>
+      <span class="arch-hud-title" id="arch-hud-title">transformer&nbsp;·&nbsp;forward pass</span>
       <span class="arch-hud-layer" id="arch-hud-layer">block 1/7 · Input Embedding + Positional Encoding</span>
       <span class="arch-hud-bar"><i id="arch-hud-fill"></i></span>
     </aside>
@@ -103,13 +119,13 @@
             </div>
             <div class="socials reveal" data-delay="6">
               <a href="https://www.linkedin.com/in/seyed-ali-shahebrahimi" target="_blank" rel="noopener" aria-label="LinkedIn" class="social">
-                <img src="./assets/linkedin.png" alt="" />
+                <img src="./assets/opt/linkedin.png" width="28" height="28" loading="lazy" decoding="async" alt="" />
               </a>
               <a href="https://github.com/alishaheb" target="_blank" rel="noopener" aria-label="GitHub" class="social">
-                <img src="./assets/github.png" alt="" />
+                <img src="./assets/opt/github.png" width="28" height="28" loading="lazy" decoding="async" alt="" />
               </a>
               <a href="mailto:ali.sh.creative@gmail.com" aria-label="Email" class="social">
-                <img src="./assets/email.png" alt="" />
+                <img src="./assets/opt/email.png" width="28" height="28" loading="lazy" decoding="async" alt="" />
               </a>
             </div>
           </div>
@@ -117,8 +133,20 @@
             <div class="parallax-layer" data-parallax="-0.08">
               <div class="portrait-frame tilt">
                 <div class="portrait-glow"></div>
-                <img src="./assets/profile-pic.png" alt="Portrait of Seyed Ali Shahebrahimi" class="portrait" />
+                <picture>
+                  <source srcset="./assets/opt/profile.webp" type="image/webp" />
+                  <img
+                    src="./assets/opt/profile.png"
+                    alt="Portrait of Seyed Ali Shahebrahimi"
+                    class="portrait"
+                    width="700"
+                    height="700"
+                    fetchpriority="high"
+                    decoding="async"
+                  />
+                </picture>
                 <div class="portrait-ring"></div>
+                <div class="portrait-ring-2"></div>
               </div>
             </div>
           </div>
@@ -138,18 +166,22 @@
         <div class="about-grid">
           <div class="about-visual reveal">
             <div class="about-img-wrap tilt">
-              <img src="./assets/about.jpg" alt="Working at a desk" />
+              <picture>
+                <source srcset="./assets/opt/about.webp" type="image/webp" />
+                <img src="./assets/opt/about.jpg" alt="Working at a desk"
+                     width="800" height="1000" loading="lazy" decoding="async" />
+              </picture>
             </div>
           </div>
           <div class="about-content">
             <div class="card-row">
               <article class="glass-card tilt reveal" data-delay="1">
-                <img src="./assets/experience.png" alt="" class="card-icon" />
+                <img src="./assets/opt/experience.png" width="68" height="68" loading="lazy" decoding="async" alt="" class="card-icon" />
                 <h3>Experience</h3>
                 <p>Machine Learning<br />Data Science<br />Full Stack Development</p>
               </article>
               <article class="glass-card tilt reveal" data-delay="2">
-                <img src="./assets/education.png" alt="" class="card-icon" />
+                <img src="./assets/opt/education.png" width="68" height="68" loading="lazy" decoding="async" alt="" class="card-icon" />
                 <h3>Education</h3>
                 <p>M.Sc. Data Science<br />B.Sc. Computer Engineering (Software)</p>
               </article>
@@ -178,79 +210,79 @@
         </div>
         <div class="skills-grid">
           <div class="skill-card tilt reveal">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python" loading="lazy" />
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python" width="48" height="48" loading="lazy" decoding="async" />
             <span>Python</span>
           </div>
           <div class="skill-card tilt reveal">
-            <img src="assets/sql.svg" alt="SQL" loading="lazy" />
+            <img src="assets/sql.svg" alt="SQL" width="48" height="48" loading="lazy" decoding="async" />
             <span>SQL</span>
           </div>
           <div class="skill-card tilt reveal">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg" alt="PyTorch" loading="lazy" />
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg" alt="PyTorch" width="48" height="48" loading="lazy" decoding="async" />
             <span>PyTorch</span>
           </div>
           <div class="skill-card tilt reveal">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg" alt="TensorFlow" loading="lazy" />
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg" alt="TensorFlow" width="48" height="48" loading="lazy" decoding="async" />
             <span>TensorFlow</span>
           </div>
           <div class="skill-card tilt reveal">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/scikitlearn/scikitlearn-original.svg" alt="Scikit-learn" loading="lazy" />
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/scikitlearn/scikitlearn-original.svg" alt="Scikit-learn" width="48" height="48" loading="lazy" decoding="async" />
             <span>Scikit-learn</span>
           </div>
           <div class="skill-card tilt reveal">
-            <img src="assets/hugging-face.svg" alt="Hugging Face" loading="lazy" />
+            <img src="assets/hugging-face.svg" alt="Hugging Face" width="48" height="48" loading="lazy" decoding="async" />
             <span>Hugging Face</span>
           </div>
           <div class="skill-card tilt reveal">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg" alt="Pandas" loading="lazy" />
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg" alt="Pandas" width="48" height="48" loading="lazy" decoding="async" />
             <span>Pandas</span>
           </div>
           <div class="skill-card tilt reveal">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/numpy/numpy-original.svg" alt="NumPy" loading="lazy" />
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/numpy/numpy-original.svg" alt="NumPy" width="48" height="48" loading="lazy" decoding="async" />
             <span>NumPy</span>
           </div>
           <div class="skill-card tilt reveal">
-            <img src="assets/apachespark-original.svg" alt="PySpark" loading="lazy" />
+            <img src="assets/apachespark-original.svg" alt="PySpark" width="48" height="48" loading="lazy" decoding="async" />
             <span>PySpark</span>
           </div>
           <div class="skill-card tilt reveal">
-            <img src="assets/docker-original-wordmark.svg" alt="Docker" loading="lazy" />
+            <img src="assets/docker-original-wordmark.svg" alt="Docker" width="48" height="48" loading="lazy" decoding="async" />
             <span>Docker</span>
           </div>
           <div class="skill-card tilt reveal">
-            <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jenkins.svg" alt="Jenkins" loading="lazy" />
+            <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jenkins.svg" alt="Jenkins" width="48" height="48" loading="lazy" decoding="async" />
             <span>Jenkins</span>
           </div>
           <div class="skill-card tilt reveal">
-            <img src="assets/amazon.svg" alt="AWS" loading="lazy" />
+            <img src="assets/amazon.svg" alt="AWS" width="48" height="48" loading="lazy" decoding="async" />
             <span>AWS</span>
           </div>
           <div class="skill-card tilt reveal">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg" alt="Google Cloud" loading="lazy" />
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg" alt="Google Cloud" width="48" height="48" loading="lazy" decoding="async" />
             <span>GCP</span>
           </div>
           <div class="skill-card tilt reveal">
-            <img src="assets/github.png" alt="Git and GitHub" loading="lazy" />
+            <img src="assets/github.png" alt="Git and GitHub" width="48" height="48" loading="lazy" decoding="async" />
             <span>Git &amp; GitHub</span>
           </div>
           <div class="skill-card tilt reveal">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/c/cf/New_Power_BI_Logo.svg" alt="Power BI" loading="lazy" />
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/cf/New_Power_BI_Logo.svg" alt="Power BI" width="48" height="48" loading="lazy" decoding="async" />
             <span>Power BI</span>
           </div>
           <div class="skill-card tilt reveal">
-            <img src="https://logo.svgcdn.com/logos/tableau-icon.svg" alt="Tableau" loading="lazy" />
+            <img src="https://logo.svgcdn.com/logos/tableau-icon.svg" alt="Tableau" width="48" height="48" loading="lazy" decoding="async" />
             <span>Tableau</span>
           </div>
           <div class="skill-card tilt reveal">
-            <img src="assets/matplotlib-original.svg" alt="Matplotlib" loading="lazy" />
+            <img src="assets/matplotlib-original.svg" alt="Matplotlib" width="48" height="48" loading="lazy" decoding="async" />
             <span>Matplotlib</span>
           </div>
           <div class="skill-card tilt reveal">
-            <img src="assets/r-original.svg" alt="R" loading="lazy" />
+            <img src="assets/r-original.svg" alt="R" width="48" height="48" loading="lazy" decoding="async" />
             <span>R</span>
           </div>
           <div class="skill-card tilt reveal">
-            <img src="assets/excel_logo_logos_icon.png" alt="Excel" loading="lazy" />
+            <img src="assets/excel_logo_logos_icon.png" alt="Excel" width="48" height="48" loading="lazy" decoding="async" />
             <span>Excel</span>
           </div>
         </div>
@@ -265,7 +297,11 @@
         <div class="projects-grid">
           <article class="project-card tilt reveal">
             <div class="project-media">
-              <img src="./assets/preprocess.jpg" alt="Automated ML pipeline" loading="lazy" />
+              <picture>
+                <source srcset="./assets/opt/preprocess.webp" type="image/webp" />
+                <img src="./assets/opt/preprocess.jpg" alt="Automated ML pipeline"
+                     width="760" height="475" loading="lazy" decoding="async" />
+              </picture>
             </div>
             <div class="project-body">
               <div class="tags"><span>Python</span><span>MLOps</span><span>CI/CD</span></div>
@@ -279,7 +315,11 @@
 
           <article class="project-card tilt reveal" data-delay="1">
             <div class="project-media">
-              <img src="./assets/roberta2.jpg" alt="Sequence classification" loading="lazy" />
+              <picture>
+                <source srcset="./assets/opt/roberta.webp" type="image/webp" />
+                <img src="./assets/opt/roberta.jpg" alt="Sequence classification"
+                     width="760" height="475" loading="lazy" decoding="async" />
+              </picture>
             </div>
             <div class="project-body">
               <div class="tags"><span>NLP</span><span>Transformers</span><span>PyTorch</span></div>
@@ -293,7 +333,11 @@
 
           <article class="project-card tilt reveal" data-delay="2">
             <div class="project-media">
-              <img src="./assets/aws-size.jpg" alt="Stock market analysis" loading="lazy" />
+              <picture>
+                <source srcset="./assets/opt/aws.webp" type="image/webp" />
+                <img src="./assets/opt/aws.jpg" alt="Stock market analysis"
+                     width="760" height="475" loading="lazy" decoding="async" />
+              </picture>
             </div>
             <div class="project-body">
               <div class="tags"><span>AWS</span><span>Time Series</span><span>Analytics</span></div>
@@ -307,7 +351,11 @@
 
           <article class="project-card tilt reveal">
             <div class="project-media">
-              <img src="./assets/guy.jpg" alt="Business analytics" loading="lazy" />
+              <picture>
+                <source srcset="./assets/opt/guy.webp" type="image/webp" />
+                <img src="./assets/opt/guy.jpg" alt="Business analytics"
+                     width="760" height="475" loading="lazy" decoding="async" />
+              </picture>
             </div>
             <div class="project-body">
               <div class="tags"><span>Analytics</span><span>Statistics</span><span>Reporting</span></div>
@@ -321,7 +369,11 @@
 
           <article class="project-card tilt reveal" data-delay="1">
             <div class="project-media">
-              <img src="./assets/health.png" alt="Healthcare dataset analysis" loading="lazy" />
+              <picture>
+                <source srcset="./assets/opt/health.webp" type="image/webp" />
+                <img src="./assets/opt/health.jpg" alt="Healthcare dataset analysis"
+                     width="760" height="475" loading="lazy" decoding="async" />
+              </picture>
             </div>
             <div class="project-body">
               <div class="tags"><span>Healthcare</span><span>EDA</span><span>ML</span></div>
@@ -335,7 +387,11 @@
 
           <article class="project-card tilt reveal" data-delay="2">
             <div class="project-media">
-              <img src="./assets/sql.jpg" alt="Database design" loading="lazy" />
+              <picture>
+                <source srcset="./assets/opt/sql.webp" type="image/webp" />
+                <img src="./assets/opt/sql.jpg" alt="Database design"
+                     width="760" height="475" loading="lazy" decoding="async" />
+              </picture>
             </div>
             <div class="project-body">
               <div class="tags"><span>SQL</span><span>Normalisation</span><span>Schema Design</span></div>
@@ -362,21 +418,21 @@
           </p>
           <div class="contact-cards">
             <a class="contact-card tilt" href="mailto:ali.sh.creative@gmail.com">
-              <img src="./assets/email.png" alt="" />
+              <img src="./assets/opt/email.png" width="28" height="28" loading="lazy" decoding="async" alt="" />
               <div>
                 <span class="contact-label">Email</span>
                 <span class="contact-value">ali.sh.creative@gmail.com</span>
               </div>
             </a>
             <a class="contact-card tilt" href="https://www.linkedin.com/in/seyed-ali-shahebrahimi" target="_blank" rel="noopener">
-              <img src="./assets/linkedin.png" alt="" />
+              <img src="./assets/opt/linkedin.png" width="28" height="28" loading="lazy" decoding="async" alt="" />
               <div>
                 <span class="contact-label">LinkedIn</span>
                 <span class="contact-value">seyed-ali-shahebrahimi</span>
               </div>
             </a>
             <a class="contact-card tilt" href="https://github.com/alishaheb" target="_blank" rel="noopener">
-              <img src="./assets/github.png" alt="" />
+              <img src="./assets/opt/github.png" width="28" height="28" loading="lazy" decoding="async" alt="" />
               <div>
                 <span class="contact-label">GitHub</span>
                 <span class="contact-value">alishaheb</span>
@@ -397,7 +453,7 @@
       <p>&copy; 2026 Seyed Ali Shahebrahimi. All rights reserved.</p>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="script.js"></script>
+    <!-- three.js is loaded from script.js after first paint, on idle -->
+    <script src="script.js" defer></script>
   </body>
 </html>

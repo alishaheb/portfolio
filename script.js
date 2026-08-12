@@ -13,6 +13,31 @@
   // the page still renders its content instead of a blank screen.
   document.documentElement.classList.add("js-ready");
 
+  var THREE_URL = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
+
+  /* Run once the page has painted and the main thread is free. Keeps a
+     ~580KB library off the critical path. */
+  function whenIdle(fn) {
+    function schedule() {
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(fn, { timeout: 2000 });
+      } else {
+        setTimeout(fn, 200);
+      }
+    }
+    if (document.readyState === "complete") schedule();
+    else window.addEventListener("load", schedule, { once: true });
+  }
+
+  function loadScript(src, cb) {
+    var s = document.createElement("script");
+    s.src = src;
+    s.async = true;
+    s.onload = function () { cb(true); };
+    s.onerror = function () { cb(false); };
+    document.head.appendChild(s);
+  }
+
   /* =========================================================
      1. TRANSFORMER BACKGROUND
      ---------------------------------------------------------
@@ -27,6 +52,7 @@
     if (!canvas) return;
 
     var hud = document.getElementById("arch-hud");
+    var hudTitle = document.getElementById("arch-hud-title");
     var hudLayer = document.getElementById("arch-hud-layer");
     var hudFill = document.getElementById("arch-hud-fill");
 
@@ -39,15 +65,20 @@
       if (window.console && reason) console.warn("[background] " + reason);
     }
 
-    if (typeof THREE === "undefined") {
-      fallback("three.js did not load — using CSS gradient background only");
-      return;
-    }
     if (reduceMotion) {
       fallback();
       return;
     }
 
+    // Don't spend 580KB of someone's metered or 2G connection on decoration.
+    var conn =
+      navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (conn && (conn.saveData === true || /(^|-)2g$/.test(conn.effectiveType || ""))) {
+      fallback("data saver / slow connection — CSS gradient only");
+      return;
+    }
+
+    // Probe WebGL before paying for the library.
     try {
       var probe = document.createElement("canvas");
       if (!(probe.getContext("webgl") || probe.getContext("experimental-webgl"))) {
@@ -58,6 +89,23 @@
       return;
     }
 
+    // Fetch three.js only after first paint, when the main thread is idle.
+    whenIdle(function () {
+      loadScript(THREE_URL, function (ok) {
+        if (!ok || typeof THREE === "undefined") {
+          fallback("three.js failed to load — using CSS gradient background only");
+          return;
+        }
+        try {
+          buildScene();
+        } catch (err) {
+          fallback("background init failed — using CSS gradient background only");
+          if (window.console) console.error(err);
+        }
+      });
+    });
+
+    function buildScene() {
     /* ---------- Architecture parameters ---------- */
     var isMobile = window.innerWidth < 768;
 
@@ -389,6 +437,283 @@
     resGeo.setAttribute("aColor", new THREE.BufferAttribute(resCol, 3));
     group.add(new THREE.Points(resGeo, tokenMat));
 
+    /* =====================================================
+       GRADIENT DESCENT — loss landscape + optimizers
+       -----------------------------------------------------
+       A real objective surface: quadratic bowl + two Gaussian
+       basins + a sinusoidal ripple. Three optimizers run
+       actual gradient descent on its analytic gradient
+       (verified against finite differences), leaving trails.
+       ===================================================== */
+
+    // Kept out of `group` so the landscape stays level while the
+    // transformer stack drifts.
+    var descentGroup = new THREE.Group();
+    scene.add(descentGroup);
+
+    var U = 2.6; // parameter-space half-extent
+    var SURF_HALF = 210; // world half-extent in x and z
+    var SURF_Y = -175;
+    var SURF_Z = -150;
+    var LOSS_SCALE = 15;
+    var L_MIN = -0.69; // measured over u,v in [-U, U]
+    var L_MAX = 7.5;
+
+    // Two deep basins of near-equal depth (-0.687 and -0.641) plus a shallow
+    // one, so different optimizers visibly end up in different minima.
+    function lossAt(u, v) {
+      var g1 = Math.exp(-(((u - 1.1) * (u - 1.1) + (v + 0.9) * (v + 0.9)) / 0.45));
+      var g2 = Math.exp(-(((u + 1.3) * (u + 1.3) + (v - 1.0) * (v - 1.0)) / 0.5));
+      return (
+        0.55 * (u * u + v * v) -
+        1.6 * g1 -
+        2.0 * g2 +
+        0.25 * Math.sin(2.2 * u) * Math.cos(2.0 * v)
+      );
+    }
+
+    // Analytic gradient of lossAt
+    var gradOut = [0, 0];
+    function gradAt(u, v) {
+      var g1 = Math.exp(-(((u - 1.1) * (u - 1.1) + (v + 0.9) * (v + 0.9)) / 0.45));
+      var g2 = Math.exp(-(((u + 1.3) * (u + 1.3) + (v - 1.0) * (v - 1.0)) / 0.5));
+      gradOut[0] =
+        1.1 * u +
+        (1.6 * g1 * 2 * (u - 1.1)) / 0.45 +
+        (2.0 * g2 * 2 * (u + 1.3)) / 0.5 +
+        0.25 * 2.2 * Math.cos(2.2 * u) * Math.cos(2.0 * v);
+      gradOut[1] =
+        1.1 * v +
+        (1.6 * g1 * 2 * (v + 0.9)) / 0.45 +
+        (2.0 * g2 * 2 * (v - 1.0)) / 0.5 -
+        0.25 * 2.0 * Math.sin(2.2 * u) * Math.sin(2.0 * v);
+      return gradOut;
+    }
+
+    function wx(u) { return (u / U) * SURF_HALF; }
+    function wz(v) { return SURF_Z + (v / U) * SURF_HALF; }
+    function wy(l) { return SURF_Y + l * LOSS_SCALE; }
+
+    /* ---------- Wireframe surface ---------- */
+    var GRID = isMobile ? 26 : 40;
+    var surfSegs = GRID * (GRID - 1) * 2;
+    var surfPos = new Float32Array(surfSegs * 6);
+    var surfCol = new Float32Array(surfSegs * 6);
+
+    var VALLEY = [0.16, 0.92, 0.80]; // bright teal at the minimum
+    var RIDGE = [0.34, 0.26, 0.72]; // dim violet on the ridges
+
+    function surfColor(l, o, off) {
+      var t = (l - L_MIN) / (L_MAX - L_MIN);
+      if (t < 0) t = 0;
+      if (t > 1) t = 1;
+      var a = Math.pow(1 - t, 1.5); // emphasise low-loss regions
+      o[off] = RIDGE[0] + (VALLEY[0] - RIDGE[0]) * a;
+      o[off + 1] = RIDGE[1] + (VALLEY[1] - RIDGE[1]) * a;
+      o[off + 2] = RIDGE[2] + (VALLEY[2] - RIDGE[2]) * a;
+      var k = 0.35 + 0.85 * a; // valleys glow brighter
+      o[off] *= k;
+      o[off + 1] *= k;
+      o[off + 2] *= k;
+    }
+
+    var si = 0;
+    function pushSeg(u0, v0, u1, v1) {
+      var l0 = lossAt(u0, v0);
+      var l1 = lossAt(u1, v1);
+      var p = si * 6;
+      surfPos[p] = wx(u0); surfPos[p + 1] = wy(l0); surfPos[p + 2] = wz(v0);
+      surfPos[p + 3] = wx(u1); surfPos[p + 4] = wy(l1); surfPos[p + 5] = wz(v1);
+      surfColor(l0, surfCol, p);
+      surfColor(l1, surfCol, p + 3);
+      si++;
+    }
+
+    var step = (2 * U) / (GRID - 1);
+    for (var gi = 0; gi < GRID; gi++) {
+      for (var gj = 0; gj < GRID - 1; gj++) {
+        var ua = -U + gi * step;
+        var va = -U + gj * step;
+        pushSeg(ua, va, ua, va + step); // line along v
+        pushSeg(va, ua, va + step, ua); // line along u
+      }
+    }
+
+    var surfGeo = new THREE.BufferGeometry();
+    surfGeo.setAttribute("position", new THREE.BufferAttribute(surfPos, 3));
+    surfGeo.setAttribute("color", new THREE.BufferAttribute(surfCol, 3));
+    descentGroup.add(
+      new THREE.LineSegments(
+        surfGeo,
+        new THREE.LineBasicMaterial({
+          vertexColors: true,
+          transparent: true,
+          opacity: 0.72,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false
+        })
+      )
+    );
+
+    /* ---------- Optimizers ---------- */
+    var TRAIL = isMobile ? 32 : 52;
+    var OPTS = [
+      { lr: 0.055, mom: 0.0, col: HEAD_COLORS[0] },  // SGD
+      { lr: 0.030, mom: 0.88, col: HEAD_COLORS[1] }, // SGD + momentum
+      { lr: 0.105, mom: 0.0, col: HEAD_COLORS[2] }   // SGD, high learning rate
+    ];
+    var NOPT = OPTS.length;
+
+    function respawn(o) {
+      o.u = (Math.random() - 0.5) * 4.4;
+      o.v = (Math.random() - 0.5) * 4.4;
+      o.vu = 0;
+      o.vv = 0;
+      o.steps = 0;
+      o.hold = 0;
+      o.n = 0;
+      for (var t = 0; t < TRAIL; t++) {
+        o.tu[t] = o.u;
+        o.tv[t] = o.v;
+      }
+    }
+
+    // Solved starting points: the first run lands the three optimizers in
+    // three separated minima, so they never overlap on screen.
+    var STARTS = [[-0.55, -1.82], [2.14, -0.2], [0.85, 2.05]];
+
+    for (var oi = 0; oi < NOPT; oi++) {
+      OPTS[oi].tu = new Float32Array(TRAIL);
+      OPTS[oi].tv = new Float32Array(TRAIL);
+      respawn(OPTS[oi]);
+      OPTS[oi].u = STARTS[oi][0];
+      OPTS[oi].v = STARTS[oi][1];
+      for (var t0 = 0; t0 < TRAIL; t0++) {
+        OPTS[oi].tu[t0] = OPTS[oi].u;
+        OPTS[oi].tv[t0] = OPTS[oi].v;
+      }
+    }
+
+    // Trails
+    var trailSegs = NOPT * (TRAIL - 1);
+    var trailPos = new Float32Array(trailSegs * 6);
+    var trailCol = new Float32Array(trailSegs * 6);
+    var trailGeo = new THREE.BufferGeometry();
+    trailGeo.setAttribute(
+      "position",
+      new THREE.BufferAttribute(trailPos, 3).setUsage(THREE.DynamicDrawUsage)
+    );
+    trailGeo.setAttribute(
+      "color",
+      new THREE.BufferAttribute(trailCol, 3).setUsage(THREE.DynamicDrawUsage)
+    );
+    descentGroup.add(
+      new THREE.LineSegments(
+        trailGeo,
+        new THREE.LineBasicMaterial({
+          vertexColors: true,
+          transparent: true,
+          opacity: 0.95,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false
+        })
+      )
+    );
+
+    // The descending points themselves
+    var ballPos = new Float32Array(NOPT * 3);
+    var ballCol = new Float32Array(NOPT * 3);
+    var ballSize = new Float32Array(NOPT);
+    for (var bi = 0; bi < NOPT; bi++) {
+      ballCol[bi * 3] = OPTS[bi].col.r;
+      ballCol[bi * 3 + 1] = OPTS[bi].col.g;
+      ballCol[bi * 3 + 2] = OPTS[bi].col.b;
+      ballSize[bi] = 7.5;
+    }
+    var ballGeo = new THREE.BufferGeometry();
+    ballGeo.setAttribute(
+      "position",
+      new THREE.BufferAttribute(ballPos, 3).setUsage(THREE.DynamicDrawUsage)
+    );
+    ballGeo.setAttribute("aSize", new THREE.BufferAttribute(ballSize, 1));
+    ballGeo.setAttribute("aColor", new THREE.BufferAttribute(ballCol, 3));
+    descentGroup.add(new THREE.Points(ballGeo, tokenMat));
+
+    var bestLoss = 0;
+
+    function stepOptimizers() {
+      var lossSum = 0;
+      for (var i = 0; i < NOPT; i++) {
+        var o = OPTS[i];
+
+        if (o.hold > 0) {
+          o.hold--; // pause on the minimum so the result is readable
+        } else {
+          var g = gradAt(o.u, o.v);
+          o.vu = o.mom * o.vu - o.lr * g[0];
+          o.vv = o.mom * o.vv - o.lr * g[1];
+          o.u += o.vu;
+          o.v += o.vv;
+          if (o.u < -U) o.u = -U;
+          if (o.u > U) o.u = U;
+          if (o.v < -U) o.v = -U;
+          if (o.v > U) o.v = U;
+          o.steps++;
+
+          var gm = Math.abs(g[0]) + Math.abs(g[1]);
+          var sp = Math.abs(o.vu) + Math.abs(o.vv);
+          if ((gm < 0.05 && sp < 0.004) || o.steps > 900) o.hold = 110;
+        }
+
+        if (o.hold === 1) respawn(o);
+
+        // Ring buffer of recent positions
+        o.tu[o.n % TRAIL] = o.u;
+        o.tv[o.n % TRAIL] = o.v;
+        o.n++;
+
+        var l = lossAt(o.u, o.v);
+        lossSum += l;
+        ballPos[i * 3] = wx(o.u);
+        ballPos[i * 3 + 1] = wy(l) + 3;
+        ballPos[i * 3 + 2] = wz(o.v);
+      }
+      bestLoss = lossSum / NOPT;
+      ballGeo.attributes.position.needsUpdate = true;
+
+      // Rebuild trail segments oldest -> newest, fading out behind
+      var seg = 0;
+      for (var k = 0; k < NOPT; k++) {
+        var op = OPTS[k];
+        var start = op.n < TRAIL ? 0 : op.n % TRAIL;
+        for (var s = 0; s < TRAIL - 1; s++) {
+          var i0 = (start + s) % TRAIL;
+          var i1 = (start + s + 1) % TRAIL;
+          var p = seg * 6;
+          var lu0 = lossAt(op.tu[i0], op.tv[i0]);
+          var lu1 = lossAt(op.tu[i1], op.tv[i1]);
+          trailPos[p] = wx(op.tu[i0]);
+          trailPos[p + 1] = wy(lu0) + 2;
+          trailPos[p + 2] = wz(op.tv[i0]);
+          trailPos[p + 3] = wx(op.tu[i1]);
+          trailPos[p + 4] = wy(lu1) + 2;
+          trailPos[p + 5] = wz(op.tv[i1]);
+
+          var f0 = (s / (TRAIL - 1)) * 1.5;
+          var f1 = ((s + 1) / (TRAIL - 1)) * 1.5;
+          trailCol[p] = op.col.r * f0;
+          trailCol[p + 1] = op.col.g * f0;
+          trailCol[p + 2] = op.col.b * f0;
+          trailCol[p + 3] = op.col.r * f1;
+          trailCol[p + 4] = op.col.g * f1;
+          trailCol[p + 5] = op.col.b * f1;
+          seg++;
+        }
+      }
+      trailGeo.attributes.position.needsUpdate = true;
+      trailGeo.attributes.color.needsUpdate = true;
+    }
+
     /* ---------- Interaction state ---------- */
     var mouse = { x: 0, y: 0 };
     var target = { x: 0, y: 0 };
@@ -510,6 +835,8 @@
     var PULSE_PERIOD = 4.2; // seconds for one forward pass
     var PULSE_SIGMA = LAYER_GAP * 0.85;
     var CAM_LEAD = 95; // how far in front of the current block the camera sits
+    var DESCENT_AT = 0.68; // scroll point where the loss landscape takes over
+    var hudPhase = "";
 
     function animate() {
       if (!running) return;
@@ -556,36 +883,70 @@
       }
       resGeo.attributes.position.needsUpdate = true;
 
-      /* --- Camera flies through the stack as the page scrolls.
-             Travel is exactly one LAYER_GAP per block, so scroll position
-             maps 1:1 onto block index and the HUD can't drift. --- */
-      var camZ = Z_FIRST + CAM_LEAD - scroll * STACK_SPAN;
+      /* --- Gradient descent runs continuously --- */
+      stepOptimizers();
+
+      /* --- Camera choreography.
+             Phase 1 (scroll 0 -> DESCENT_AT): fly through the transformer
+             blocks, one LAYER_GAP per block, so scroll maps 1:1 onto block
+             index. Phase 2: rise and tilt down to frame the loss landscape. */
+      var p2 = (scroll - DESCENT_AT) / (1 - DESCENT_AT);
+      if (p2 < 0) p2 = 0;
+      if (p2 > 1) p2 = 1;
+      p2 = p2 * p2 * (3 - 2 * p2); // smoothstep
+
+      var blockScroll = Math.min(scroll / DESCENT_AT, 1);
+      var camZ = Z_FIRST + CAM_LEAD - blockScroll * STACK_SPAN - p2 * 150;
       camera.position.z = camZ;
       camera.position.x += (mouse.x * 26 - camera.position.x) * 0.05;
-      camera.position.y += (-mouse.y * 18 + 6 - camera.position.y) * 0.05;
-      camera.lookAt(mouse.x * 10, -mouse.y * 6, camZ - 140);
+      var wantY = 6 + p2 * 96 - mouse.y * 18;
+      camera.position.y += (wantY - camera.position.y) * 0.05;
+
+      // Look ahead through the stack, then swing down onto the surface
+      camera.lookAt(
+        mouse.x * 10,
+        -mouse.y * 6 - p2 * 168,
+        camZ - 140 - p2 * 110
+      );
 
       // Slow drift so the stack never looks frozen
       group.rotation.z = Math.sin(elapsed * 0.09) * 0.035;
       group.rotation.y = Math.sin(elapsed * 0.06) * 0.05 + mouse.x * 0.06;
+      // The landscape stays level; only a whisper of yaw
+      descentGroup.rotation.y = Math.sin(elapsed * 0.05) * 0.02;
 
       renderer.render(scene, camera);
 
-      /* --- HUD: which block are we inside? --- */
+      /* --- HUD: transformer block, then live gradient descent --- */
       if (hudLayer && frame % 6 === 0) {
-        var li = Math.round(scroll * (LAYERS - 1));
-        if (li < 0) li = 0;
-        if (li > LAYERS - 1) li = LAYERS - 1;
-        if (li !== hudIndex) {
-          hudIndex = li;
+        if (p2 > 0.5) {
+          if (hudPhase !== "descent") {
+            hudPhase = "descent";
+            hudIndex = -1;
+            if (hudTitle) hudTitle.textContent = "gradient descent · backward pass";
+          }
           hudLayer.textContent =
-            "block " + (li + 1) + "/" + LAYERS + " · " + LAYER_NAMES[li];
+            "step " + OPTS[0].steps + " · mean loss " + bestLoss.toFixed(3);
+        } else {
+          if (hudPhase !== "forward") {
+            hudPhase = "forward";
+            if (hudTitle) hudTitle.textContent = "transformer · forward pass";
+          }
+          var li = Math.round(blockScroll * (LAYERS - 1));
+          if (li < 0) li = 0;
+          if (li > LAYERS - 1) li = LAYERS - 1;
+          if (li !== hudIndex) {
+            hudIndex = li;
+            hudLayer.textContent =
+              "block " + (li + 1) + "/" + LAYERS + " · " + LAYER_NAMES[li];
+          }
         }
         if (hudFill) hudFill.style.width = (scroll * 100).toFixed(1) + "%";
       }
     }
 
     animate();
+    } /* end buildScene */
   }
 
   /* =========================================================

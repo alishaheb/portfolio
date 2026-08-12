@@ -2,7 +2,9 @@
    Seyed Ali Shahebrahimi — Portfolio
    ============================================ */
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap");
+/* Fonts are loaded via <link> in index.html, not @import. An @import here
+   serialises the request chain: style.css must download and parse before the
+   browser even discovers the font CSS, which then blocks on the font files. */
 
 :root {
   --bg: #05070d;
@@ -59,6 +61,13 @@ body {
 img {
   max-width: 100%;
   display: block;
+}
+
+/* <picture> is inline by default, which would break the sizing of the img
+   inside it. display:contents removes its box so the img stays the direct
+   child of the layout container. */
+picture {
+  display: contents;
 }
 
 a {
@@ -624,18 +633,54 @@ main, header, footer { position: relative; z-index: 3; }
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
 }
 
+/* Orbit ring. Was 1px at 14% white, which was effectively invisible —
+   now 3px, full-strength accents, with a glow and a leading dot. */
 .portrait-ring {
   position: absolute;
-  inset: 0;
+  inset: -2%;
+  z-index: 3;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 3px solid rgba(255, 255, 255, 0.13);
   border-top-color: var(--accent);
   border-right-color: var(--accent-2);
-  animation: spin 14s linear infinite;
+  box-shadow:
+    0 0 24px rgba(79, 140, 255, 0.5),
+    inset 0 0 26px rgba(79, 140, 255, 0.14);
+  animation: spin 8s linear infinite;
+  will-change: transform;
+}
+
+/* Bright dot riding the ring */
+.portrait-ring::after {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  width: 13px;
+  height: 13px;
+  margin-left: -6.5px;
+  border-radius: 50%;
+  background: var(--accent-2);
+  box-shadow: 0 0 16px 5px rgba(38, 224, 200, 0.8);
+}
+
+/* Counter-rotating inner ring, for depth */
+.portrait-ring-2 {
+  position: absolute;
+  inset: 3%; /* photo is 88% of the frame, so this clears its edge */
+  z-index: 3;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(160, 107, 255, 0.55);
+  animation: spin-rev 26s linear infinite;
+  will-change: transform;
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+@keyframes spin-rev {
+  to { transform: rotate(-360deg); }
 }
 
 /* Scroll cue */
